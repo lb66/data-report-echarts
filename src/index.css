@@ -5,3 +5,6 @@
 .el-card__header {
   padding: 0 20px;
 }
+.el-table .cell{
+  white-space:nowrap
+}

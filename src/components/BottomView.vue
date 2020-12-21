@@ -19,9 +19,9 @@
         </div>
         <div class="table-wrapper">
           <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="rank" label="排名" width="180" />
-            <el-table-column prop="keyword" label="关键词" width="180" />
-            <el-table-column prop="count" label="姓总搜索量" />
+            <el-table-column prop="rank" label="排名" />
+            <el-table-column prop="keyword" label="关键词" />
+            <el-table-column prop="count" label="总搜索量" />
             <el-table-column prop="users" label="搜索用户数" />
             <el-table-column prop="range" label="点击率" />
           </el-table>
@@ -48,9 +48,9 @@
             </div>
           </div>
         </div>
-        <template>
+        <div class="pie-chart">
           <v-chart :options="categoryOption" />
-        </template>
+        </div>
       </el-card>
     </div>
   </div>
@@ -127,15 +127,121 @@ export default {
     onChangePage(e) {
       console.log(e);
     },
+    renderPieChart() {
+      const mockData = [
+        {
+          legendname: "汉堡披萨1",
+          value: 67,
+          percent: "20.20",
+          name: "汉堡披萨1 | 20.20",
+          // itemStyle:{color:'lightblue'}
+        },
+        {
+          legendname: "汉堡披萨2",
+          value: 67,
+          percent: "20.20",
+          name: "汉堡披萨2 | 20.20%",
+        },
+        {
+          legendname: "汉堡披萨3",
+          value: 67,
+          percent: "20.20",
+          name: "汉堡披萨3 | 20.20%",
+        },
+      ];
+      this.categoryOption = {
+        title: [
+          {
+            text: "品类分布",
+            textStyle: {
+              fontSize: 14,
+              color: "#666",
+            },
+            left: 20,
+          },
+          {
+            text: ["累计订单量"],
+            subtext: "328",
+            x: "34.5%",
+            y: "42.5%",
+            textAlign: "center",
+            textStyle: {
+              fontSize: 14,
+              color: "#999",
+            },
+            subtextStyle: {
+              fontSize: 28,
+              color: "#333",
+            },
+          },
+        ],
+        series: {
+          type: "pie",
+          data: mockData,
+          label: {
+            normal: {
+              show: true,
+              position: "outter",
+              formatter: (params) => {
+                return params.data.legendname;
+              },
+            },
+          },
+          labelLine: {
+            normal: {
+              length: 10,
+              length2: 10,
+              smooth: true,
+            },
+          },
+          center: ["35%", "50%"], //中点位置
+          radius: ["50%", "65%"], //变成环形
+          itemStyle:{
+            borderWidth:4,
+            borderColor:'#fff'
+          }//空隙
+        },
+        legend: {
+          orient: "vertical", //垂直方向
+          left: "70%",
+          top: "middle",
+          textStyle: {
+            color: "#8c8c8c",
+          },
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: (params) => {
+            return (
+              params.marker +
+              params.data.legendname +
+              "<br/>" +
+              "数量：" +
+              params.data.value +
+              "<br/>" +
+              "占比：" +
+              params.data.percent+'%'
+            );
+          },
+        },
+      };
+    },
+  },
+  mounted() {
+    this.renderPieChart();
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.pie-chart {
+  height: 406.8px;
+}
 .bottom-view {
   margin-top: 20px;
   display: flex;
   .view {
+    width: 50%;
     flex: 1;
     font-size: 14px;
     .title {
